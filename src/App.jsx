@@ -1,22 +1,24 @@
 import { useState } from 'react'
+import SubmarineCables from './components/SubmarineCables'
 import './App.css'
 
 const SOURCES = [
-  { id: 'source1', label: 'Source 1' },
-  { id: 'source2', label: 'Source 2' },
+  { id: 'cables', label: 'Submarine Cables', component: <SubmarineCables /> },
+  { id: 'source2', label: 'Source 2', component: null },
 ]
 
-function DataCard({ label }) {
+function Placeholder({ label }) {
   return (
     <div className="card">
       <h2>{label}</h2>
-      <p className="placeholder">No data yet — connect a source to get started.</p>
+      <p className="placeholder">Not connected yet.</p>
     </div>
   )
 }
 
 export default function App() {
   const [active, setActive] = useState(SOURCES[0].id)
+  const source = SOURCES.find(s => s.id === active)
 
   return (
     <div className="layout">
@@ -36,9 +38,7 @@ export default function App() {
       </header>
 
       <main className="content">
-        {SOURCES.filter((s) => s.id === active).map((s) => (
-          <DataCard key={s.id} label={s.label} />
-        ))}
+        {source?.component ?? <Placeholder label={source?.label} />}
       </main>
     </div>
   )

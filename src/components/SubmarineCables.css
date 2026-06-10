@@ -1,0 +1,215 @@
+.sc-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sc-loading {
+  color: #555;
+  font-size: 14px;
+  padding: 24px;
+}
+
+.sc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.sc-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.sc-disclaimer {
+  font-size: 12px;
+  color: #555;
+  max-width: 480px;
+}
+
+.sc-stats {
+  display: flex;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sc-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: none;
+  border: 1px solid #2a2d3a;
+  color: #888;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover {
+  color: #e8e8e8;
+  border-color: #444;
+}
+
+.filter-btn.active {
+  color: #fff;
+  background: #2a2d3a;
+  border-color: #444;
+}
+
+.sort-select {
+  background: #1a1d27;
+  border: 1px solid #2a2d3a;
+  color: #888;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sc-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sc-thead {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #444;
+  padding: 0 16px 6px;
+}
+
+.sc-row {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 90px 1.8fr 140px;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.sc-row:not(.sc-thead):hover {
+  background: #1a1d27;
+}
+
+.cable-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cable-name span:first-child {
+  font-size: 14px;
+  color: #e8e8e8;
+  font-weight: 500;
+}
+
+.cable-owners {
+  font-size: 11px;
+  color: #555 !important;
+  font-weight: 400 !important;
+}
+
+.route-badge {
+  font-size: 11px;
+  color: #888;
+  background: #1a1d27;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.sc-row:not(.sc-thead):hover .route-badge {
+  background: #0f1117;
+}
+
+.capacity {
+  font-size: 14px;
+  color: #aaa;
+  font-variant-numeric: tabular-nums;
+}
+
+.countries {
+  font-size: 12px;
+  color: #555;
+}
+
+.load-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.load-cell span {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.load-bar-track {
+  height: 4px;
+  background: #2a2d3a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.load-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.sc-source {
+  font-size: 11px;
+  color: #444;
+  padding-top: 8px;
+  border-top: 1px solid #1a1d27;
+}
+
+.sc-source a {
+  color: #666;
+  text-decoration: none;
+}
+
+.sc-source a:hover {
+  color: #888;
+}

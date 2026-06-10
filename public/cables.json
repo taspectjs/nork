@@ -1,0 +1,249 @@
+[
+  {
+    "id": "2africa",
+    "name": "2Africa",
+    "length_km": "45,000 km",
+    "rfs_year": 2024,
+    "is_planned": false,
+    "countries": [
+      "Angola",
+      "Bahrain",
+      "Comoros",
+      "Congo, Dem. Rep.",
+      "Congo, Rep.",
+      "C\u00f4te d'Ivoire",
+      "Djibouti",
+      "Egypt",
+      "France",
+      "Gabon"
+    ],
+    "capacity_tbps": 180,
+    "owners": [
+      "Meta",
+      "MTN",
+      "Orange",
+      "stc",
+      "Telecom Egypt",
+      "Vodafone",
+      "WIOCC"
+    ],
+    "route": "Africa-Europe-ME"
+  },
+  {
+    "id": "amitie",
+    "name": "Amitie",
+    "length_km": "6,792 km",
+    "rfs_year": 2023,
+    "is_planned": false,
+    "countries": [
+      "France",
+      "United Kingdom",
+      "United States"
+    ],
+    "capacity_tbps": 400,
+    "owners": [
+      "Facebook",
+      "Microsoft",
+      "Aqua Comms",
+      "Vodafone"
+    ],
+    "route": "Trans-Atlantic"
+  },
+  {
+    "id": "apricot",
+    "name": "Apricot",
+    "length_km": "11,972 km",
+    "rfs_year": 2025,
+    "is_planned": false,
+    "countries": [
+      "Guam",
+      "Indonesia",
+      "Japan",
+      "Philippines",
+      "Singapore",
+      "Taiwan"
+    ],
+    "capacity_tbps": 190,
+    "owners": [
+      "Facebook",
+      "Google",
+      "NTT",
+      "PLDT",
+      "SoftBank",
+      "KDDI",
+      "Amazon"
+    ],
+    "route": "Trans-Pacific"
+  },
+  {
+    "id": "bifrost",
+    "name": "Bifrost",
+    "length_km": "19,888 km",
+    "rfs_year": 2025,
+    "is_planned": false,
+    "countries": [
+      "Guam",
+      "Indonesia",
+      "Mexico",
+      "Philippines",
+      "Singapore",
+      "United States"
+    ],
+    "capacity_tbps": 200,
+    "owners": [
+      "Meta",
+      "Keppel"
+    ],
+    "route": "Trans-Pacific"
+  },
+  {
+    "id": "dunant",
+    "name": "Dunant",
+    "length_km": "6,400 km",
+    "rfs_year": 2021,
+    "is_planned": false,
+    "countries": [
+      "France",
+      "United States"
+    ],
+    "capacity_tbps": 250,
+    "owners": [
+      "Google"
+    ],
+    "route": "Trans-Atlantic"
+  },
+  {
+    "id": "echo",
+    "name": "Echo",
+    "length_km": "17,184 km",
+    "rfs_year": 2025,
+    "is_planned": false,
+    "countries": [
+      "Guam",
+      "Indonesia",
+      "Palau",
+      "Singapore",
+      "United States"
+    ],
+    "capacity_tbps": 80,
+    "owners": [
+      "Google",
+      "Meta"
+    ],
+    "route": "Trans-Pacific"
+  },
+  {
+    "id": "faster",
+    "name": "FASTER",
+    "length_km": "11,629 km",
+    "rfs_year": 2016,
+    "is_planned": false,
+    "countries": [
+      "Japan",
+      "Taiwan",
+      "United States"
+    ],
+    "capacity_tbps": 60,
+    "owners": [
+      "Google",
+      "KDDI",
+      "SingTel",
+      "China Mobile",
+      "GTI",
+      "PCCW"
+    ],
+    "route": "Trans-Pacific"
+  },
+  {
+    "id": "grace-hopper",
+    "name": "Grace Hopper",
+    "length_km": "7,191 km",
+    "rfs_year": 2022,
+    "is_planned": false,
+    "countries": [
+      "Spain",
+      "United Kingdom",
+      "United States"
+    ],
+    "capacity_tbps": 340,
+    "owners": [
+      "Google"
+    ],
+    "route": "Trans-Atlantic"
+  },
+  {
+    "id": "jupiter",
+    "name": "JUPITER",
+    "length_km": "14,557 km",
+    "rfs_year": 2020,
+    "is_planned": false,
+    "countries": [
+      "Japan",
+      "Philippines",
+      "United States"
+    ],
+    "capacity_tbps": 60,
+    "owners": [
+      "Meta",
+      "PLDT",
+      "PCCW",
+      "Softbank",
+      "Amazon"
+    ],
+    "route": "Trans-Pacific"
+  },
+  {
+    "id": "marea",
+    "name": "MAREA",
+    "length_km": "6,605 km",
+    "rfs_year": 2018,
+    "is_planned": false,
+    "countries": [
+      "Spain",
+      "United States"
+    ],
+    "capacity_tbps": 200,
+    "owners": [
+      "Microsoft",
+      "Facebook"
+    ],
+    "route": "Trans-Atlantic"
+  },
+  {
+    "id": "monet",
+    "name": "Monet",
+    "length_km": "10,556 km",
+    "rfs_year": 2017,
+    "is_planned": false,
+    "countries": [
+      "Brazil",
+      "United States"
+    ],
+    "capacity_tbps": 64,
+    "owners": [
+      "Google",
+      "Algar Telecom",
+      "Angola Cables",
+      "Antel"
+    ],
+    "route": "Trans-Atlantic"
+  },
+  {
+    "id": "topaz",
+    "name": "Topaz",
+    "length_km": null,
+    "rfs_year": 2023,
+    "is_planned": false,
+    "countries": [
+      "Canada",
+      "Japan",
+      "Taiwan"
+    ],
+    "capacity_tbps": 20,
+    "owners": [
+      "FLAG Telecom",
+      "NTT"
+    ],
+    "route": "Trans-Pacific"
+  }
+]
