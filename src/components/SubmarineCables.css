@@ -213,3 +213,100 @@
 .sc-source a:hover {
   color: #888;
 }
+
+.view-tabs {
+  display: flex;
+  background: #1a1d27;
+  padding: 3px;
+  border-radius: 7px;
+  gap: 2px;
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.view-btn.active {
+  background: #2a2d3a;
+  color: #fff;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  background: #1a1d27;
+  border: 1px solid #2a2d3a;
+  border-radius: 10px;
+  padding: 20px 16px 16px;
+}
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8e8e8;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.chart-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: #555;
+}
+
+.chart-tooltip {
+  background: #0f1117;
+  border: 1px solid #2a2d3a;
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #aaa;
+  line-height: 1.7;
+}
+
+.tooltip-label {
+  color: #666;
+  margin-bottom: 2px;
+  font-size: 11px;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #2a2d3a;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #666;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
