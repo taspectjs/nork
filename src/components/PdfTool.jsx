@@ -40,8 +40,8 @@ export default function PdfTool() {
   async function loadFile(f) {
     if (!f?.name.toLowerCase().endsWith('.pdf')) return
     const buf = await f.arrayBuffer()
-    const pdf = await pdfjsLib.getDocument({ data: buf }).promise
-    setFile({ file: f, buf, size: f.size })
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise  // buf gets transferred to worker
+    setFile({ file: f, size: f.size })  // store File only; buf is detached after transfer
     setPageCount(pdf.numPages)
     setResult(null)
     setProgress(null)
@@ -50,7 +50,7 @@ export default function PdfTool() {
   async function handleCompress() {
     if (!file) return
     const { quality, scale } = QUALITY_PRESETS[preset]
-    const pdf = await pdfjsLib.getDocument({ data: file.buf.slice(0) }).promise
+    const pdf = await pdfjsLib.getDocument({ data: await file.file.arrayBuffer() }).promise
     const outDoc = await PDFDocument.create()
     setProgress({ current: 0, total: pdf.numPages })
 
@@ -73,7 +73,7 @@ export default function PdfTool() {
 
   async function handleExportImages() {
     if (!file) return
-    const pdf = await pdfjsLib.getDocument({ data: file.buf.slice(0) }).promise
+    const pdf = await pdfjsLib.getDocument({ data: await file.file.arrayBuffer() }).promise
     const { scale } = QUALITY_PRESETS[preset]
     setProgress({ current: 0, total: pdf.numPages })
 
