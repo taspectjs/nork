@@ -7,9 +7,9 @@ import './PdfTool.css'
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl
 
 const QUALITY_PRESETS = [
-  { label: 'High (light)', quality: 0.85, scale: 1.5, desc: '~40% smaller' },
-  { label: 'Medium', quality: 0.65, scale: 1.2, desc: '~65% smaller' },
-  { label: 'Low (max)', quality: 0.45, scale: 1.0, desc: '~80% smaller' },
+  { label: 'High', quality: 0.80, scale: 1.0, desc: 'Good quality' },
+  { label: 'Medium', quality: 0.60, scale: 0.85, desc: 'Balanced' },
+  { label: 'Low (max)', quality: 0.38, scale: 0.70, desc: 'Smallest size' },
 ]
 
 function formatBytes(bytes) {
@@ -67,7 +67,8 @@ export default function PdfTool() {
     const bytes = await outDoc.save()
     const blob = new Blob([bytes], { type: 'application/pdf' })
     const name = file.file.name.replace('.pdf', '_compressed.pdf')
-    setResult({ url: URL.createObjectURL(blob), name, size: bytes.byteLength, originalSize: file.size })
+    const larger = bytes.byteLength >= file.size
+    setResult({ url: URL.createObjectURL(blob), name, size: bytes.byteLength, originalSize: file.size, larger })
     setProgress(null)
   }
 
@@ -177,20 +178,25 @@ export default function PdfTool() {
       )}
 
       {result && (
-        <div className="result-box">
+        <div className={`result-box ${result.larger ? 'result-warn' : ''}`}>
           <div className="result-info">
-            <span className="result-label">Done</span>
-            {!result.isZip && (
+            {!result.isZip && !result.larger && (
               <>
+                <span className="result-label">Done</span>
                 <span>{formatBytes(result.originalSize)} → <strong>{formatBytes(result.size)}</strong></span>
-                <span className="result-savings" style={{ color: '#22c55e' }}>
-                  −{Math.round((1 - result.size / result.originalSize) * 100)}%
-                </span>
+                <span className="result-savings">−{Math.round((1 - result.size / result.originalSize) * 100)}%</span>
               </>
             )}
-            {result.isZip && <span>{result.name}</span>}
+            {!result.isZip && result.larger && (
+              <>
+                <span className="result-label warn">Larger</span>
+                <span>{formatBytes(result.originalSize)} → <strong>{formatBytes(result.size)}</strong></span>
+                <span className="result-hint">PDF uses vector/text — try a lower quality preset</span>
+              </>
+            )}
+            {result.isZip && <><span className="result-label">Done</span><span>{result.name}</span></>}
           </div>
-          <a className="download-btn" href={result.url} download={result.name}>Download</a>
+          <a className="download-btn" href={result.url} download={result.name}>Download anyway</a>
         </div>
       )}
     </div>

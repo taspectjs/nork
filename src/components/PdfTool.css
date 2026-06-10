@@ -239,9 +239,23 @@
   text-transform: uppercase;
 }
 
+.result-label.warn {
+  color: #f59e0b;
+}
+
+.result-box.result-warn {
+  border-color: #3a2e1a;
+}
+
 .result-savings {
   font-weight: 700;
   font-size: 16px;
+  color: #22c55e;
+}
+
+.result-hint {
+  font-size: 12px;
+  color: #666;
 }
 
 .download-btn {
