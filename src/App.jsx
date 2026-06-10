@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import SubmarineCables from './components/SubmarineCables'
+import PdfTool from './components/PdfTool'
 import './App.css'
 
 const SOURCES = [
   { id: 'cables', label: 'Submarine Cables', component: <SubmarineCables /> },
-  { id: 'source2', label: 'Source 2', component: null },
+  { id: 'pdf', label: 'PDF Tools', component: <PdfTool /> },
 ]
 
 function Placeholder({ label }) {
