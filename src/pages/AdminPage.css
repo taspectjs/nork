@@ -1,0 +1,270 @@
+.admin-wrapper {
+  max-width: 900px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.admin-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.admin-role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #6b9fff;
+  background: rgba(107,159,255,0.1);
+  border: 1px solid rgba(107,159,255,0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 700px) {
+  .admin-grid { grid-template-columns: 1fr; }
+}
+
+.admin-section {
+  background: #0f1117;
+  border: 1px solid #1a1d27;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.admin-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-form-row {
+  flex-direction: row;
+  align-items: center;
+}
+
+.admin-form input {
+  background: #0a0c14;
+  border: 1px solid #1e2130;
+  border-radius: 7px;
+  color: #e8e8e8;
+  font-size: 13px;
+  padding: 8px 12px;
+  outline: none;
+  flex: 1;
+}
+
+.admin-form input:focus {
+  border-color: #3b4a6b;
+}
+
+.admin-select {
+  background: #0a0c14;
+  border: 1px solid #1e2130;
+  border-radius: 7px;
+  color: #888;
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+.admin-btn {
+  background: #1e2130;
+  border: 1px solid #2a2d3a;
+  border-radius: 7px;
+  color: #e8e8e8;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.admin-btn:hover:not(:disabled) { background: #2a2d3a; }
+.admin-btn:disabled { opacity: 0.5; cursor: default; }
+
+.admin-msg {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin: 0;
+}
+
+.admin-msg.ok { color: #22c55e; background: rgba(34,197,94,0.08); }
+.admin-msg.err { color: #ef4444; background: rgba(239,68,68,0.08); }
+
+.admin-note {
+  font-size: 12px;
+  color: #444;
+  margin: 8px 0 0;
+  line-height: 1.6;
+}
+
+.admin-note code {
+  color: #666;
+  font-family: monospace;
+}
+
+/* Users */
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #0a0c14;
+}
+
+.ue-avatar {
+  width: 26px;
+  height: 26px;
+  background: #1e2d4a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b9fff;
+  flex-shrink: 0;
+}
+
+.ue-name {
+  font-size: 13px;
+  color: #e8e8e8;
+  flex: 1;
+}
+
+.ue-role {
+  font-size: 11px;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.ue-remove {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  transition: color 0.15s;
+}
+
+.ue-remove:hover { color: #ef4444; }
+
+/* Data sources */
+.source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: #888;
+}
+
+.data-stat {
+  font-size: 12px;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+
+/* App settings */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #666;
+}
+
+.setting-val {
+  font-size: 12px;
+  color: #444;
+}
+
+/* Deploy */
+.deploy-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.deploy-link {
+  font-size: 12px;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.deploy-link:hover { text-decoration: underline; }
+
+.deploy-runs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.deploy-run {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  background: #0a0c14;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 12px;
+  color: #666;
+  transition: background 0.12s;
+}
+
+.deploy-run:hover { background: #12141f; }
+
+.run-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.run-dot.ok { background: #22c55e; }
+.run-dot.fail { background: #ef4444; }
+
+.run-sha { font-family: monospace; color: #555; }
+.run-status { color: #444; flex: 1; }
+.run-date { color: #333; }

@@ -1,0 +1,204 @@
+import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
+import './AdminPage.css'
+
+const BUILD_TIME = new Date().toISOString().slice(0, 10)
+
+function Section({ title, children }) {
+  return (
+    <div className="admin-section">
+      <h3 className="admin-section-title">{title}</h3>
+      {children}
+    </div>
+  )
+}
+
+export default function AdminPage() {
+  const { user, changePassword, addUser, removeUser, getAll } = useAuth()
+  const [users, setUsers] = useState(() => getAll())
+
+  // Password change
+  const [curPw, setCurPw] = useState('')
+  const [newPw, setNewPw] = useState('')
+  const [pwMsg, setPwMsg] = useState(null)
+
+  // New user
+  const [newUsername, setNewUsername] = useState('')
+  const [newRole, setNewRole] = useState('viewer')
+  const [userMsg, setUserMsg] = useState(null)
+
+  // Data source settings (stored in localStorage)
+  const [cableSource, setCableSource] = useState(
+    () => localStorage.getItem('nork_cable_source') || 'static'
+  )
+
+  // Deploy info
+  const [deployInfo, setDeployInfo] = useState(null)
+  const [deployLoading, setDeployLoading] = useState(false)
+
+  async function handlePwChange(e) {
+    e.preventDefault()
+    setPwMsg(null)
+    try {
+      await changePassword(curPw, newPw)
+      setPwMsg({ ok: true, text: 'Password updated.' })
+      setCurPw(''); setNewPw('')
+    } catch (err) {
+      setPwMsg({ ok: false, text: err.message })
+    }
+  }
+
+  function handleAddUser(e) {
+    e.preventDefault()
+    setUserMsg(null)
+    try {
+      addUser(newUsername.trim(), newRole)
+      setUsers(getAll())
+      setUserMsg({ ok: true, text: `User "${newUsername}" added.` })
+      setNewUsername('')
+    } catch (err) {
+      setUserMsg({ ok: false, text: err.message })
+    }
+  }
+
+  function handleRemoveUser(username) {
+    try {
+      removeUser(username)
+      setUsers(getAll())
+    } catch (err) {
+      setUserMsg({ ok: false, text: err.message })
+    }
+  }
+
+  function saveCableSource(val) {
+    setCableSource(val)
+    localStorage.setItem('nork_cable_source', val)
+  }
+
+  async function fetchDeployInfo() {
+    setDeployLoading(true)
+    try {
+      const res = await fetch('https://api.github.com/repos/taspectjs/nork/actions/runs?per_page=3')
+      const data = await res.json()
+      setDeployInfo(data.workflow_runs?.slice(0, 3) || [])
+    } catch {
+      setDeployInfo([])
+    }
+    setDeployLoading(false)
+  }
+
+  return (
+    <div className="admin-wrapper">
+      <div className="admin-header">
+        <h2>Admin</h2>
+        <span className="admin-role-badge">{user?.role}</span>
+      </div>
+
+      <div className="admin-grid">
+
+        {/* Password */}
+        <Section title="Change Password">
+          <form onSubmit={handlePwChange} className="admin-form">
+            <input type="password" placeholder="Current password" value={curPw}
+              onChange={e => setCurPw(e.target.value)} required />
+            <input type="password" placeholder="New password (min 8 chars)" value={newPw}
+              onChange={e => setNewPw(e.target.value)} minLength={8} required />
+            <button type="submit" className="admin-btn">Update Password</button>
+            {pwMsg && <p className={`admin-msg ${pwMsg.ok ? 'ok' : 'err'}`}>{pwMsg.text}</p>}
+          </form>
+        </Section>
+
+        {/* Users */}
+        <Section title="Users">
+          <div className="user-list">
+            {users.map(u => (
+              <div key={u.username} className="user-entry">
+                <span className="ue-avatar">{u.username[0].toUpperCase()}</span>
+                <span className="ue-name">{u.username}</span>
+                <span className="ue-role">{u.role}</span>
+                {u.username !== 'admin' && (
+                  <button className="ue-remove" onClick={() => handleRemoveUser(u.username)}>✕</button>
+                )}
+              </div>
+            ))}
+          </div>
+          <form onSubmit={handleAddUser} className="admin-form admin-form-row" style={{ marginTop: 12 }}>
+            <input type="text" placeholder="Username" value={newUsername}
+              onChange={e => setNewUsername(e.target.value)} required />
+            <select value={newRole} onChange={e => setNewRole(e.target.value)} className="admin-select">
+              <option value="viewer">Viewer</option>
+              <option value="admin">Admin</option>
+            </select>
+            <button type="submit" className="admin-btn">Add</button>
+          </form>
+          {userMsg && <p className={`admin-msg ${userMsg.ok ? 'ok' : 'err'}`}>{userMsg.text}</p>}
+        </Section>
+
+        {/* Data sources */}
+        <Section title="Data Sources">
+          <div className="source-row">
+            <span>Submarine Cable Data</span>
+            <select value={cableSource} onChange={e => saveCableSource(e.target.value)} className="admin-select">
+              <option value="static">Static (cables.json in repo)</option>
+              <option value="telegeography">TeleGeography API (build-time)</option>
+            </select>
+          </div>
+          <p className="admin-note">
+            Cable data is pre-fetched at build time and stored in <code>public/cables.json</code>.
+            Push a new commit to refresh it.
+          </p>
+          <div className="source-row" style={{ marginTop: 12 }}>
+            <span>Last data file</span>
+            <span className="data-stat">
+              {BUILD_TIME} · 12 cables
+            </span>
+          </div>
+        </Section>
+
+        {/* App settings */}
+        <Section title="App Settings">
+          <div className="settings-list">
+            <div className="setting-row">
+              <span>Theme</span>
+              <span className="setting-val">Dark (fixed)</span>
+            </div>
+            <div className="setting-row">
+              <span>App version</span>
+              <span className="setting-val">1.0.0</span>
+            </div>
+            <div className="setting-row">
+              <span>Auth type</span>
+              <span className="setting-val">Local hash (client-side)</span>
+            </div>
+          </div>
+        </Section>
+
+        {/* Deploy info */}
+        <Section title="Deploy & CI">
+          <div className="deploy-meta">
+            <div className="setting-row"><span>Repo</span><a href="https://github.com/taspectjs/nork" target="_blank" rel="noreferrer" className="deploy-link">taspectjs/nork</a></div>
+            <div className="setting-row"><span>Hosting</span><span className="setting-val">GitHub Pages</span></div>
+            <div className="setting-row"><span>Branch</span><span className="setting-val">main</span></div>
+          </div>
+          <button className="admin-btn" style={{ marginTop: 12 }} onClick={fetchDeployInfo} disabled={deployLoading}>
+            {deployLoading ? 'Loading…' : 'Load recent runs'}
+          </button>
+          {deployInfo && (
+            <div className="deploy-runs">
+              {deployInfo.length === 0 && <p className="admin-note">No runs found.</p>}
+              {deployInfo.map(r => (
+                <a key={r.id} href={r.html_url} target="_blank" rel="noreferrer" className="deploy-run">
+                  <span className={`run-dot ${r.conclusion === 'success' ? 'ok' : 'fail'}`} />
+                  <span className="run-sha">{r.head_sha.slice(0, 7)}</span>
+                  <span className="run-status">{r.conclusion || r.status}</span>
+                  <span className="run-date">{new Date(r.created_at).toLocaleDateString()}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </Section>
+
+      </div>
+    </div>
+  )
+}
