@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { format } from 'date-fns'
+import { format, getWeek, getDayOfYear, getQuarter } from 'date-fns'
 import { de } from 'date-fns/locale'
 import './DailyPage.css'
 
@@ -119,11 +119,11 @@ export default function DailyPage() {
           <div className="card-label">Today</div>
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-num">{format(now, 'w')}</span>
+              <span className="stat-num">{getWeek(now, { locale: de })}</span>
               <span className="stat-lbl">Week of year</span>
             </div>
             <div className="stat-item">
-              <span className="stat-num">{format(now, 'D')}</span>
+              <span className="stat-num">{getDayOfYear(now)}</span>
               <span className="stat-lbl">Day of year</span>
             </div>
             <div className="stat-item">
@@ -131,7 +131,7 @@ export default function DailyPage() {
               <span className="stat-lbl">Days left in year</span>
             </div>
             <div className="stat-item">
-              <span className="stat-num">{format(now, 'Q')}</span>
+              <span className="stat-num">Q{getQuarter(now)}</span>
               <span className="stat-lbl">Quarter</span>
             </div>
           </div>
