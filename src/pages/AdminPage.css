@@ -170,6 +170,18 @@
   text-transform: uppercase;
 }
 
+.ue-icon-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+}
+
+.ue-icon-btn:hover { opacity: 1; }
+
 .ue-remove {
   background: none;
   border: none;
@@ -181,6 +193,48 @@
 }
 
 .ue-remove:hover { color: #ef4444; }
+
+.user-entry-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.reset-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 8px 8px 44px;
+  background: #0a0c14;
+  border-radius: 0 0 6px 6px;
+  flex-wrap: wrap;
+}
+
+.reset-form input {
+  background: #12141f;
+  border: 1px solid #1e2130;
+  border-radius: 6px;
+  color: #e8e8e8;
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  flex: 1;
+  min-width: 140px;
+}
+
+.reset-form input:focus { border-color: #3b4a6b; }
+
+.admin-btn.secondary {
+  background: none;
+  border-color: #1e2130;
+  color: #555;
+}
+
+.admin-msg.inline {
+  display: inline;
+  padding: 4px 8px;
+  font-size: 11px;
+}
 
 /* Data sources */
 .source-row {

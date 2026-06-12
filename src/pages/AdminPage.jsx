@@ -13,11 +13,62 @@ function Section({ title, children }) {
   )
 }
 
+function UserEntry({ u, onRemove, onReset }) {
+  const [editing, setEditing] = useState(false)
+  const [pw, setPw] = useState('')
+  const [msg, setMsg] = useState(null)
+
+  async function handleReset(e) {
+    e.preventDefault()
+    setMsg(null)
+    try {
+      await onReset(u.username, pw)
+      setMsg({ ok: true, text: 'Password reset.' })
+      setPw('')
+      setTimeout(() => { setEditing(false); setMsg(null) }, 1500)
+    } catch (err) {
+      setMsg({ ok: false, text: err.message })
+    }
+  }
+
+  return (
+    <div className="user-entry-wrap">
+      <div className="user-entry">
+        <span className="ue-avatar">{u.username[0].toUpperCase()}</span>
+        <span className="ue-name">{u.username}</span>
+        <span className="ue-role">{u.role}</span>
+        <button className="ue-icon-btn" title="Reset password" onClick={() => { setEditing(e => !e); setMsg(null); setPw('') }}>
+          🔑
+        </button>
+        {u.username !== 'admin' && (
+          <button className="ue-remove" onClick={() => onRemove(u.username)} title="Remove user">✕</button>
+        )}
+      </div>
+      {editing && (
+        <form onSubmit={handleReset} className="reset-form">
+          <input
+            type="password"
+            placeholder="New password (min 8 chars)"
+            value={pw}
+            onChange={e => setPw(e.target.value)}
+            minLength={8}
+            required
+            autoFocus
+          />
+          <button type="submit" className="admin-btn">Set</button>
+          <button type="button" className="admin-btn secondary" onClick={() => setEditing(false)}>Cancel</button>
+          {msg && <span className={`admin-msg inline ${msg.ok ? 'ok' : 'err'}`}>{msg.text}</span>}
+        </form>
+      )}
+    </div>
+  )
+}
+
 export default function AdminPage() {
-  const { user, changePassword, addUser, removeUser, getAll } = useAuth()
+  const { user, changePassword, resetUserPassword, addUser, removeUser, getAll } = useAuth()
   const [users, setUsers] = useState(() => getAll())
 
-  // Password change
+  // Own password change
   const [curPw, setCurPw] = useState('')
   const [newPw, setNewPw] = useState('')
   const [pwMsg, setPwMsg] = useState(null)
@@ -25,9 +76,10 @@ export default function AdminPage() {
   // New user
   const [newUsername, setNewUsername] = useState('')
   const [newRole, setNewRole] = useState('viewer')
+  const [newUserPw, setNewUserPw] = useState('')
   const [userMsg, setUserMsg] = useState(null)
 
-  // Data source settings (stored in localStorage)
+  // Data source
   const [cableSource, setCableSource] = useState(
     () => localStorage.getItem('nork_cable_source') || 'static'
   )
@@ -48,14 +100,14 @@ export default function AdminPage() {
     }
   }
 
-  function handleAddUser(e) {
+  async function handleAddUser(e) {
     e.preventDefault()
     setUserMsg(null)
     try {
-      addUser(newUsername.trim(), newRole)
+      await addUser(newUsername.trim(), newRole, newUserPw)
       setUsers(getAll())
       setUserMsg({ ok: true, text: `User "${newUsername}" added.` })
-      setNewUsername('')
+      setNewUsername(''); setNewUserPw('')
     } catch (err) {
       setUserMsg({ ok: false, text: err.message })
     }
@@ -68,11 +120,6 @@ export default function AdminPage() {
     } catch (err) {
       setUserMsg({ ok: false, text: err.message })
     }
-  }
-
-  function saveCableSource(val) {
-    setCableSource(val)
-    localStorage.setItem('nork_cable_source', val)
   }
 
   async function fetchDeployInfo() {
@@ -96,84 +143,72 @@ export default function AdminPage() {
 
       <div className="admin-grid">
 
-        {/* Password */}
-        <Section title="Change Password">
+        <Section title="Change My Password">
           <form onSubmit={handlePwChange} className="admin-form">
             <input type="password" placeholder="Current password" value={curPw}
               onChange={e => setCurPw(e.target.value)} required />
             <input type="password" placeholder="New password (min 8 chars)" value={newPw}
               onChange={e => setNewPw(e.target.value)} minLength={8} required />
-            <button type="submit" className="admin-btn">Update Password</button>
+            <button type="submit" className="admin-btn">Update</button>
             {pwMsg && <p className={`admin-msg ${pwMsg.ok ? 'ok' : 'err'}`}>{pwMsg.text}</p>}
           </form>
         </Section>
 
-        {/* Users */}
         <Section title="Users">
           <div className="user-list">
             {users.map(u => (
-              <div key={u.username} className="user-entry">
-                <span className="ue-avatar">{u.username[0].toUpperCase()}</span>
-                <span className="ue-name">{u.username}</span>
-                <span className="ue-role">{u.role}</span>
-                {u.username !== 'admin' && (
-                  <button className="ue-remove" onClick={() => handleRemoveUser(u.username)}>✕</button>
-                )}
-              </div>
+              <UserEntry
+                key={u.username}
+                u={u}
+                onRemove={handleRemoveUser}
+                onReset={resetUserPassword}
+              />
             ))}
           </div>
-          <form onSubmit={handleAddUser} className="admin-form admin-form-row" style={{ marginTop: 12 }}>
-            <input type="text" placeholder="Username" value={newUsername}
-              onChange={e => setNewUsername(e.target.value)} required />
-            <select value={newRole} onChange={e => setNewRole(e.target.value)} className="admin-select">
-              <option value="viewer">Viewer</option>
-              <option value="admin">Admin</option>
-            </select>
-            <button type="submit" className="admin-btn">Add</button>
+
+          <form onSubmit={handleAddUser} className="admin-form" style={{ marginTop: 14 }}>
+            <div className="admin-form-row">
+              <input type="text" placeholder="Username" value={newUsername}
+                onChange={e => setNewUsername(e.target.value)} required />
+              <select value={newRole} onChange={e => setNewRole(e.target.value)} className="admin-select">
+                <option value="viewer">Viewer</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div className="admin-form-row">
+              <input type="password" placeholder="Password (min 8 chars)" value={newUserPw}
+                onChange={e => setNewUserPw(e.target.value)} minLength={8} required />
+              <button type="submit" className="admin-btn">Add User</button>
+            </div>
+            {userMsg && <p className={`admin-msg ${userMsg.ok ? 'ok' : 'err'}`}>{userMsg.text}</p>}
           </form>
-          {userMsg && <p className={`admin-msg ${userMsg.ok ? 'ok' : 'err'}`}>{userMsg.text}</p>}
         </Section>
 
-        {/* Data sources */}
         <Section title="Data Sources">
           <div className="source-row">
             <span>Submarine Cable Data</span>
-            <select value={cableSource} onChange={e => saveCableSource(e.target.value)} className="admin-select">
+            <select value={cableSource} onChange={e => { setCableSource(e.target.value); localStorage.setItem('nork_cable_source', e.target.value) }} className="admin-select">
               <option value="static">Static (cables.json in repo)</option>
               <option value="telegeography">TeleGeography API (build-time)</option>
             </select>
           </div>
           <p className="admin-note">
-            Cable data is pre-fetched at build time and stored in <code>public/cables.json</code>.
-            Push a new commit to refresh it.
+            Cable data is pre-fetched at build time and stored in <code>public/cables.json</code>. Push a new commit to refresh.
           </p>
           <div className="source-row" style={{ marginTop: 12 }}>
             <span>Last data file</span>
-            <span className="data-stat">
-              {BUILD_TIME} · 12 cables
-            </span>
+            <span className="data-stat">{BUILD_TIME} · 12 cables</span>
           </div>
         </Section>
 
-        {/* App settings */}
         <Section title="App Settings">
           <div className="settings-list">
-            <div className="setting-row">
-              <span>Theme</span>
-              <span className="setting-val">Dark (fixed)</span>
-            </div>
-            <div className="setting-row">
-              <span>App version</span>
-              <span className="setting-val">1.0.0</span>
-            </div>
-            <div className="setting-row">
-              <span>Auth type</span>
-              <span className="setting-val">Local hash (client-side)</span>
-            </div>
+            <div className="setting-row"><span>Theme</span><span className="setting-val">Dark (fixed)</span></div>
+            <div className="setting-row"><span>App version</span><span className="setting-val">1.0.0</span></div>
+            <div className="setting-row"><span>Auth type</span><span className="setting-val">Per-user SHA256 hash</span></div>
           </div>
         </Section>
 
-        {/* Deploy info */}
         <Section title="Deploy & CI">
           <div className="deploy-meta">
             <div className="setting-row"><span>Repo</span><a href="https://github.com/taspectjs/nork" target="_blank" rel="noreferrer" className="deploy-link">taspectjs/nork</a></div>
