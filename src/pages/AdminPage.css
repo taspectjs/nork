@@ -176,11 +176,43 @@
   font-size: 13px;
   cursor: pointer;
   padding: 2px 4px;
-  opacity: 0.4;
+  opacity: 0.35;
   transition: opacity 0.15s;
 }
 
-.ue-icon-btn:hover { opacity: 1; }
+.ue-icon-btn:hover, .ue-icon-btn.active { opacity: 1; }
+
+.pages-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 8px 8px 44px;
+  background: #0a0c14;
+  border-radius: 0 0 6px 6px;
+}
+
+.page-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #1e2130;
+  border-radius: 6px;
+  transition: border-color 0.12s, color 0.12s;
+  user-select: none;
+}
+
+.page-check:has(input:checked) {
+  border-color: #3b4a6b;
+  color: #e8e8e8;
+}
+
+.page-check input {
+  accent-color: #6b9fff;
+}
 
 .ue-remove {
   background: none;

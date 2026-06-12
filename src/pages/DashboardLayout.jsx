@@ -1,22 +1,36 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './DashboardLayout.css'
 
-const NAV = [
-  { to: 'cables',  label: 'Submarine Cables', icon: '🌊' },
-  { to: 'pdf',     label: 'PDF Tools',         icon: '📄' },
+const ALL_NAV = [
+  { to: 'daily',  label: 'Daily',            icon: '📅', page: 'daily'  },
+  { to: 'cables', label: 'Submarine Cables', icon: '🌊', page: 'cables' },
+  { to: 'pdf',    label: 'PDF Tools',        icon: '📄', page: 'pdf'    },
 ]
+
+export function RequirePage({ page, children }) {
+  const { user } = useAuth()
+  const allowed = user?.role === 'admin' || user?.pages?.includes(page)
+  return allowed ? children : <Navigate to="/dashboard" replace />
+}
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
 
+  const visibleNav = ALL_NAV.filter(item =>
+    user?.role === 'admin' || user?.pages?.includes(item.page)
+  )
+
   function handleLogout() {
     logout()
     navigate('/')
   }
+
+  // Redirect to first allowed page if at /dashboard root
+  const firstAllowed = visibleNav[0]?.to ?? 'daily'
 
   return (
     <div className={`dash-root ${collapsed ? 'collapsed' : ''}`}>
@@ -29,7 +43,7 @@ export default function DashboardLayout() {
         </div>
 
         <nav className="sidebar-nav">
-          {NAV.map(item => (
+          {visibleNav.map(item => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -43,14 +57,16 @@ export default function DashboardLayout() {
         </nav>
 
         <div className="sidebar-bottom">
-          <NavLink
-            to="admin"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-            title={collapsed ? 'Admin' : ''}
-          >
-            <span className="nav-icon">⚙</span>
-            {!collapsed && <span className="nav-label">Admin</span>}
-          </NavLink>
+          {user?.role === 'admin' && (
+            <NavLink
+              to="admin"
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+              title={collapsed ? 'Admin' : ''}
+            >
+              <span className="nav-icon">⚙</span>
+              {!collapsed && <span className="nav-label">Admin</span>}
+            </NavLink>
+          )}
 
           <div className="user-row" title={collapsed ? user?.username : ''}>
             <span className="user-avatar">{user?.username?.[0]?.toUpperCase()}</span>
@@ -62,11 +78,7 @@ export default function DashboardLayout() {
             )}
           </div>
 
-          <button
-            className="nav-item signout-btn"
-            onClick={handleLogout}
-            title="Sign out"
-          >
+          <button className="nav-item signout-btn" onClick={handleLogout} title="Sign out">
             <span className="nav-icon">⏻</span>
             {!collapsed && <span className="nav-label">Sign out</span>}
           </button>
@@ -74,7 +86,7 @@ export default function DashboardLayout() {
       </aside>
 
       <main className="dash-main">
-        <Outlet />
+        <Outlet context={{ firstAllowed }} />
       </main>
     </div>
   )

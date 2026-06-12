@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth, ALL_PAGES } from '../context/AuthContext'
 import './AdminPage.css'
+
+const PAGE_LABELS = { daily: '📅 Daily', cables: '🌊 Cables', pdf: '📄 PDF Tools' }
 
 const BUILD_TIME = new Date().toISOString().slice(0, 10)
 
@@ -13,10 +15,11 @@ function Section({ title, children }) {
   )
 }
 
-function UserEntry({ u, onRemove, onReset }) {
-  const [editing, setEditing] = useState(false)
+function UserEntry({ u, onRemove, onReset, onPagesChange }) {
+  const [tab, setTab] = useState(null) // null | 'pw' | 'pages'
   const [pw, setPw] = useState('')
   const [msg, setMsg] = useState(null)
+  const [pages, setPages] = useState(u.pages ?? [...ALL_PAGES])
 
   async function handleReset(e) {
     e.preventDefault()
@@ -25,10 +28,16 @@ function UserEntry({ u, onRemove, onReset }) {
       await onReset(u.username, pw)
       setMsg({ ok: true, text: 'Password reset.' })
       setPw('')
-      setTimeout(() => { setEditing(false); setMsg(null) }, 1500)
+      setTimeout(() => { setTab(null); setMsg(null) }, 1500)
     } catch (err) {
       setMsg({ ok: false, text: err.message })
     }
+  }
+
+  function togglePage(page) {
+    const next = pages.includes(page) ? pages.filter(p => p !== page) : [...pages, page]
+    setPages(next)
+    onPagesChange(u.username, next)
   }
 
   return (
@@ -37,26 +46,33 @@ function UserEntry({ u, onRemove, onReset }) {
         <span className="ue-avatar">{u.username[0].toUpperCase()}</span>
         <span className="ue-name">{u.username}</span>
         <span className="ue-role">{u.role}</span>
-        <button className="ue-icon-btn" title="Reset password" onClick={() => { setEditing(e => !e); setMsg(null); setPw('') }}>
-          🔑
-        </button>
+        <button className={`ue-icon-btn ${tab === 'pages' ? 'active' : ''}`} title="Page access" onClick={() => { setTab(t => t === 'pages' ? null : 'pages'); setMsg(null) }}>🔒</button>
+        <button className={`ue-icon-btn ${tab === 'pw' ? 'active' : ''}`} title="Reset password" onClick={() => { setTab(t => t === 'pw' ? null : 'pw'); setMsg(null); setPw('') }}>🔑</button>
         {u.username !== 'admin' && (
           <button className="ue-remove" onClick={() => onRemove(u.username)} title="Remove user">✕</button>
         )}
       </div>
-      {editing && (
+
+      {tab === 'pages' && (
+        <div className="pages-form">
+          {u.role === 'admin'
+            ? <span className="admin-note" style={{ padding: '6px 0' }}>Admin has access to all pages.</span>
+            : ALL_PAGES.map(page => (
+              <label key={page} className="page-check">
+                <input type="checkbox" checked={pages.includes(page)} onChange={() => togglePage(page)} />
+                {PAGE_LABELS[page]}
+              </label>
+            ))
+          }
+        </div>
+      )}
+
+      {tab === 'pw' && (
         <form onSubmit={handleReset} className="reset-form">
-          <input
-            type="password"
-            placeholder="New password (min 8 chars)"
-            value={pw}
-            onChange={e => setPw(e.target.value)}
-            minLength={8}
-            required
-            autoFocus
-          />
+          <input type="password" placeholder="New password (min 8 chars)" value={pw}
+            onChange={e => setPw(e.target.value)} minLength={8} required autoFocus />
           <button type="submit" className="admin-btn">Set</button>
-          <button type="button" className="admin-btn secondary" onClick={() => setEditing(false)}>Cancel</button>
+          <button type="button" className="admin-btn secondary" onClick={() => setTab(null)}>Cancel</button>
           {msg && <span className={`admin-msg inline ${msg.ok ? 'ok' : 'err'}`}>{msg.text}</span>}
         </form>
       )}
@@ -65,7 +81,7 @@ function UserEntry({ u, onRemove, onReset }) {
 }
 
 export default function AdminPage() {
-  const { user, changePassword, resetUserPassword, addUser, removeUser, getAll } = useAuth()
+  const { user, changePassword, resetUserPassword, updateUserPages, addUser, removeUser, getAll } = useAuth()
   const [users, setUsers] = useState(() => getAll())
 
   // Own password change
@@ -162,6 +178,7 @@ export default function AdminPage() {
                 u={u}
                 onRemove={handleRemoveUser}
                 onReset={resetUserPassword}
+                onPagesChange={(username, pages) => { updateUserPages(username, pages); setUsers(getAll()) }}
               />
             ))}
           </div>
