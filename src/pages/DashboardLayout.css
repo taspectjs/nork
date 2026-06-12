@@ -155,22 +155,17 @@
   letter-spacing: 0.05em;
 }
 
-.logout-btn {
+.signout-btn {
+  width: 100%;
   background: none;
   border: none;
-  color: #333;
-  font-size: 16px;
   cursor: pointer;
-  padding: 4px;
-  flex-shrink: 0;
-  transition: color 0.15s;
+  text-align: left;
 }
 
-.logout-btn:hover { color: #ef4444; }
-
-.logout-collapsed {
-  align-self: center;
-  padding: 6px;
+.signout-btn:hover {
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: #ef4444 !important;
 }
 
 /* Main content */

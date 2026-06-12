@@ -60,13 +60,16 @@ export default function DashboardLayout() {
                 <span className="user-role">{user?.role}</span>
               </div>
             )}
-            {!collapsed && (
-              <button className="logout-btn" onClick={handleLogout} title="Sign out">↩</button>
-            )}
           </div>
-          {collapsed && (
-            <button className="logout-btn logout-collapsed" onClick={handleLogout} title="Sign out">↩</button>
-          )}
+
+          <button
+            className="nav-item signout-btn"
+            onClick={handleLogout}
+            title="Sign out"
+          >
+            <span className="nav-icon">⏻</span>
+            {!collapsed && <span className="nav-label">Sign out</span>}
+          </button>
         </div>
       </aside>
 
